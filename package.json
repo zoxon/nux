@@ -39,7 +39,7 @@
   },
   "browser": true,
   "repository": {
-  "type": "git",
+    "type": "git",
     "url": "https://github.com/zoxon/nux"
   },
   "bugs": {
