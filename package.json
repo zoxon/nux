@@ -1,6 +1,6 @@
 {
   "name": "@zoxon/nux",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "Nano framework for building UI components in TypeScript.",
   "keywords": [
     "components",
@@ -46,6 +46,9 @@
     "url": "https://github.com/zoxon/nux/issues"
   },
   "homepage": "https://github.com/zoxon/nux#readme",
+  "publishConfig": {
+    "access": "public"
+  },
   "scripts": {
     "build": "tsup",
     "typecheck": "tsc --noEmit",
