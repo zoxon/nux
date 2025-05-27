@@ -1,0 +1,61 @@
+{
+  "name": "@zoxon/nux",
+  "version": "1.0.0",
+  "description": "Nano framework for building UI components in TypeScript.",
+  "keywords": [
+    "components",
+    "framework",
+    "typescript"
+  ],
+  "author": "Konstantin Velichko",
+  "license": "MIT",
+  "type": "module",
+  "main": "./dist/index.cjs",
+  "module": "./dist/index.mjs",
+  "types": "./dist/index.d.ts",
+  "exports": {
+    ".": {
+      "import": "./dist/index.mjs",
+      "require": "./dist/index.cjs",
+      "types": "./dist/index.d.ts"
+    },
+    "./astro": {
+      "import": "./dist/integrations/astro/index.mjs",
+      "require": "./dist/integrations/astro/index.cjs",
+      "types": "./dist/integrations/astro/index.d.ts"
+    },
+    "./vanilla": {
+      "import": "./dist/integrations/vanilla/index.mjs",
+      "require": "./dist/integrations/vanilla/index.cjs",
+      "types": "./dist/integrations/vanilla/index.d.ts"
+    }
+  },
+  "files": [
+    "dist"
+  ],
+  "sideEffects": false,
+  "engines": {
+    "node": ">=18"
+  },
+  "browser": true,
+  "repository": {
+  "type": "git",
+    "url": "https://github.com/zoxon/nux"
+  },
+  "bugs": {
+    "url": "https://github.com/zoxon/nux/issues"
+  },
+  "homepage": "https://github.com/zoxon/nux#readme",
+  "scripts": {
+    "build": "tsup",
+    "typecheck": "tsc --noEmit",
+    "release": "npm run build && changeset publish"
+  },
+  "devDependencies": {
+    "@changesets/cli": "^2.29.4",
+    "astro": "^5.8.0",
+    "prettier": "^3.5.3",
+    "tsup": "^8.5.0",
+    "typescript": "^5.8.3"
+  }
+}
