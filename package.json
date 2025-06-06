@@ -1,6 +1,6 @@
 {
   "name": "@zoxon/nux",
-  "version": "1.0.1",
+  "version": "1.0.2",
   "description": "Nano framework for building UI components in TypeScript.",
   "keywords": [
     "components",
@@ -16,18 +16,25 @@
   "exports": {
     ".": {
       "import": "./dist/index.mjs",
-      "require": "./dist/index.cjs",
-      "types": "./dist/index.d.ts"
+      "require": "./dist/index.cjs"
     },
     "./astro": {
       "import": "./dist/integrations/astro/index.mjs",
-      "require": "./dist/integrations/astro/index.cjs",
-      "types": "./dist/integrations/astro/index.d.ts"
+      "require": "./dist/integrations/astro/index.cjs"
     },
     "./vanilla": {
       "import": "./dist/integrations/vanilla/index.mjs",
-      "require": "./dist/integrations/vanilla/index.cjs",
-      "types": "./dist/integrations/vanilla/index.d.ts"
+      "require": "./dist/integrations/vanilla/index.cjs"
+    }
+  },
+  "typesVersions": {
+    "*": {
+      "integrations/astro": [
+        "./dist/integrations/astro/index.d.ts"
+      ],
+      "integrations/vanilla": [
+        "./dist/integrations/vanilla/index.d.ts"
+      ]
     }
   },
   "files": [

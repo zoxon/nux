@@ -14,7 +14,15 @@ export default defineConfig({
   dts: true,
   sourcemap: true,
   clean: true,
-  splitting: true,
+  splitting: false,
   treeshake: true,
   target: "es2020",
+  esbuildOptions(options, context) {
+    if (context.format === "esm") {
+      options.outExtension = { ".js": ".mjs" };
+    }
+    if (context.format === "cjs") {
+      options.outExtension = { ".js": ".cjs" };
+    }
+  },
 });
