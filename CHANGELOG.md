@@ -1,5 +1,11 @@
 # @zoxon/nux
 
+## 1.1.0
+
+### Minor Changes
+
+- bb2f4a3: Added explicit "types" field to exports for better TypeScript support.
+
 ## 1.0.2
 
 ### Patch Changes
