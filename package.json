@@ -15,9 +15,9 @@
   "types": "./dist/index.d.ts",
   "exports": {
     ".": {
+      "types": "./dist/index.d.ts",
       "import": "./dist/index.mjs",
-      "require": "./dist/index.cjs",
-      "types": "./dist/index.d.ts"
+      "require": "./dist/index.cjs"
     },
     "./astro": {
       "import": "./dist/integrations/astro/index.mjs",
@@ -60,14 +60,18 @@
   "scripts": {
     "build": "tsup",
     "typecheck": "tsc --noEmit",
+    "test": "vitest",
+    "test:run": "vitest run",
     "release": "npm run build && changeset publish"
   },
   "devDependencies": {
     "@changesets/cli": "^2.29.4",
     "astro": "^5.8.0",
+    "happy-dom": "^20.7.0",
     "prettier": "^3.5.3",
     "tsup": "^8.5.0",
-    "typescript": "^5.8.3"
+    "typescript": "^5.8.3",
+    "vitest": "^4.0.18"
   },
   "dependencies": {
     "@zoxon/eventor": "^1.0.0"
