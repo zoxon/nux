@@ -1,19 +1,18 @@
 import type { AstroIntegration } from 'astro'
-import type { ScopeSelector } from '../../core/helpers'
 
-interface AstroIntegrationOptions {
-  scope?: ScopeSelector
+const astroIntegration = (): AstroIntegration => {
+  const script = `
+import { markAppReady } from '@zoxon/nux';
+
+if (document.readyState === 'loading') {
+  document.addEventListener('DOMContentLoaded', () => markAppReady(), { once: true });
+} else {
+  markAppReady();
 }
-
-const astroIntegration = (options?: AstroIntegrationOptions): AstroIntegration => {
-  const script = `import { initComponents } from '@zoxon/nux';
-
-document.addEventListener("DOMContentLoaded", () => {
-  initComponents(${JSON.stringify(options)});
-});`
+`
 
   return {
-    name: 'components-integration',
+    name: 'nux-integration',
     hooks: {
       'astro:config:setup': ({ injectScript }) => {
         injectScript('page', script)

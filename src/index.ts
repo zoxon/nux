@@ -1,3 +1,5 @@
 export * from './core/Component'
 export * from './core/helpers'
 export * from './core/types'
+export { markAppReady, onAppReady, onSetupComplete } from './core/lifecycle'
+export { dispatchCustomEvent, listenEvent } from './core/events'

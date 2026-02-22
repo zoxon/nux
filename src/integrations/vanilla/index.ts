@@ -1,11 +1,11 @@
-import { initComponents, ScopeSelector } from "../.."
+import { markAppReady } from '../../core/lifecycle'
 
-interface VanillaIntegrationOptions {
-  scope?: ScopeSelector
-}
-
-const init = async (options?: VanillaIntegrationOptions) => {
-  return await initComponents({ scope: options?.scope || 'page' })
+export function init(): void {
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', () => markAppReady(), { once: true })
+  } else {
+    markAppReady()
+  }
 }
 
 export default init
