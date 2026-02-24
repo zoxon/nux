@@ -62,7 +62,8 @@
     "typecheck": "tsc --noEmit",
     "test": "vitest",
     "test:run": "vitest run",
-    "release": "npm run build && changeset publish"
+    "release": "npm run build && changeset publish",
+    "prepare": "npm run build"
   },
   "devDependencies": {
     "@changesets/cli": "^2.29.4",
