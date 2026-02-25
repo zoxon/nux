@@ -47,12 +47,22 @@ The name **Nux** combines several meaningful layers:
      #count = 0
 
      async init() {
-       const btn = this.get<HTMLButtonElement>('btn')
+       const plus = this.get<HTMLButtonElement>('plus')
+       const minus = this.get<HTMLButtonElement>('pminuss')
        const output = this.get<HTMLElement>('output')
 
-       this.on(btn, 'click', () => {
-         this.#count++
+       const updateOutput = () => {
          output!.textContent = String(this.#count)
+       }
+
+       this.on(plus, 'click', () => {
+         this.#count++
+         updateOutput()
+       })
+
+       this.on(minus, 'click', () => {
+         this.#count--
+         updateOutput()
        })
      }
    }
@@ -62,8 +72,9 @@ The name **Nux** combines several meaningful layers:
 
    ```html
    <div data-component="counter">
-     <button data-ref="counter:btn">+</button>
+     <button data-ref="counter:plus">+</button>
      <span data-ref="counter:output">0</span>
+     <button data-ref="counter:minus">-</button>
    </div>
    ```
 
@@ -80,10 +91,10 @@ The name **Nux** combines several meaningful layers:
 
 Components initialize in two phases to prevent broadcast event race conditions:
 
-| Phase | Method     | Purpose                            |
-|-------|------------|------------------------------------|
-| 1     | `init()`   | Register listeners, prepare state  |
-| 2     | `start()`  | Dispatch events, start logic       |
+| Phase | Method    | Purpose                           |
+| ----- | --------- | --------------------------------- |
+| 1     | `init()`  | Register listeners, prepare state |
+| 2     | `start()` | Dispatch events, start logic      |
 
 Phase 1 completes for **all** components before Phase 2 begins for **any**. A component that
 dispatches an event in `start()` is guaranteed that every other component has already registered
@@ -197,7 +208,7 @@ const modal = this.getInstance(el)  // → Modal | undefined
 ### Component properties
 
 | Property  | Type          | Description           |
-|-----------|---------------|-----------------------|
+| --------- | ------------- | --------------------- |
 | `element` | `HTMLElement` | The root DOM element. |
 
 ## Typed Cross-Component Events

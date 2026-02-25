@@ -134,7 +134,7 @@ describe('Component', () => {
 
   // ─── on() — window events ──────────────────────────────────────────────────
 
-  describe('on() — window events', () => {
+  describe('on()', () => {
     it('registers listener and receives events', async () => {
       const handler = vi.fn()
       class Foo extends Component {
@@ -163,13 +163,13 @@ describe('Component', () => {
     })
   })
 
-  // ─── on() — DOM element events ─────────────────────────────────────────────
+  // ─── listen() — DOM element events ─────────────────────────────────────────
 
-  describe('on() — DOM element events', () => {
+  describe('listen()', () => {
     it('registers listener on DOM element', async () => {
       const handler = vi.fn()
       class Foo extends Component {
-        override async init() { this.on(this.element, 'click', handler) }
+        override async init() { this.listen(this.element, 'click', handler) }
       }
       const el = makeEl()
       new Foo('foo', el)
@@ -183,7 +183,7 @@ describe('Component', () => {
     it('removes DOM listener on destroy()', async () => {
       const handler = vi.fn()
       class Foo extends Component {
-        override async init() { this.on(this.element, 'click', handler) }
+        override async init() { this.listen(this.element, 'click', handler) }
       }
       const el = makeEl()
       const foo = new Foo('foo', el)
@@ -198,7 +198,7 @@ describe('Component', () => {
     it('silently skips null element', async () => {
       class Foo extends Component {
         override async init() {
-          expect(() => this.on(null, 'click', vi.fn())).not.toThrow()
+          expect(() => this.listen(null, 'click', vi.fn())).not.toThrow()
         }
       }
       new Foo('foo', makeEl())
@@ -224,13 +224,17 @@ describe('Component', () => {
       expect(handler).toHaveBeenCalledOnce()
       window.removeEventListener('test:broadcast', handler)
     })
+  })
 
+  // ─── dispatch() ────────────────────────────────────────────────────────────
+
+  describe('dispatch()', () => {
     it('dispatches event on a DOM element', async () => {
       const handler = vi.fn()
       class Foo extends Component {
         override async start() {
           this.element.addEventListener('custom:test', handler)
-          this.emit(this.element, 'custom:test', { ok: true })
+          this.dispatch(this.element, 'custom:test', { ok: true })
         }
       }
       new Foo('foo', makeEl())
@@ -243,7 +247,7 @@ describe('Component', () => {
     it('silently skips null element', async () => {
       class Foo extends Component {
         override async start() {
-          expect(() => this.emit(null, 'custom:test')).not.toThrow()
+          expect(() => this.dispatch(null, 'custom:test')).not.toThrow()
         }
       }
       new Foo('foo', makeEl())
@@ -345,7 +349,7 @@ describe('Component', () => {
       class Foo extends Component {
         override async init() {
           this.on('test:signal', winHandler)
-          this.on(this.element, 'click', domHandler)
+          this.listen(this.element, 'click', domHandler)
         }
       }
       const el = makeEl()

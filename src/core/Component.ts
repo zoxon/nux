@@ -1,6 +1,6 @@
 import type { ComponentRootElement } from './types'
-import { dispatchCustomEvent } from './events'
-import { getInstanceFromElement, onEvent, emitEvent } from './helpers'
+import { dispatchCustomEvent, dispatchElement, EventController } from './events'
+import { getInstanceFromElement } from './helpers'
 
 import {
   onAppReady,
@@ -12,7 +12,7 @@ import {
 
 export class Component {
   #name: string
-  #cleanups: Array<() => void> = []
+  #events = new EventController()
   #startCallbacks: Array<() => void | Promise<void>> = []
 
   element: HTMLElement
@@ -63,39 +63,41 @@ export class Component {
 
   /**
    * Listen to a window custom event.
-   * Listener is registered immediately and removed automatically on destroy().
+   * Automatically removed on destroy().
    */
-  protected on<K extends keyof WindowEventMap>(event: K, handler: (e: WindowEventMap[K]) => void): void
-  /**
-   * Listen to a DOM element event.
-   * If element is null, the call is silently skipped.
-   * Listener is removed automatically on destroy().
-   */
-  protected on<K extends keyof HTMLElementEventMap>(element: Element | null, event: K, handler: (e: HTMLElementEventMap[K]) => void): void
-  protected on(
-    eventOrElement: string | Element | null,
-    handlerOrEvent: ((e: Event) => void) | string,
-    handler?: (e: Event) => void
-  ): void {
-    const cleanup = onEvent(eventOrElement, handlerOrEvent, handler)
-    if (cleanup) this.#cleanups.push(cleanup)
+  protected on<K extends keyof WindowEventMap>(event: K, handler: (e: WindowEventMap[K]) => void): void {
+    this.#events.on(event, handler)
   }
 
   /**
-   * Dispatch a window custom event (broadcast).
+   * Listen to a DOM element event.
+   * If element is null, the call is silently skipped.
+   * Automatically removed on destroy().
    */
-  protected emit<K extends keyof WindowEventMap>(event: K, detail: WindowEventMap[K] extends CustomEvent<infer T> ? T : never): void
+  protected listen<K extends keyof HTMLElementEventMap>(
+    element: Element | null,
+    event: K,
+    handler: (e: HTMLElementEventMap[K]) => void
+  ): void {
+    this.#events.listen(element, event, handler)
+  }
+
+  /**
+   * Broadcast a window custom event.
+   */
+  protected emit<K extends keyof WindowEventMap>(
+    event: K,
+    detail: WindowEventMap[K] extends CustomEvent<infer T> ? T : never
+  ): void {
+    dispatchCustomEvent(event, detail)
+  }
+
   /**
    * Dispatch a CustomEvent on a DOM element (bubbles by default).
    * If element is null, the call is silently skipped.
    */
-  protected emit(element: Element | null, event: string, detail?: unknown): void
-  protected emit(
-    eventOrElement: string | Element | null,
-    detailOrEvent: unknown,
-    detail?: unknown
-  ): void {
-    emitEvent(eventOrElement, detailOrEvent, detail)
+  protected dispatch(element: Element | null, event: string, detail?: unknown): void {
+    dispatchElement(element, event, detail)
   }
 
   get<E extends Element>(name: string, context?: Element): E | null {
@@ -125,7 +127,7 @@ export class Component {
   }
 
   /**
-   * Phase 1: declare listeners via this.on(), prepare state.
+   * Phase 1: declare listeners via this.on() / this.listen(), prepare state.
    * Called for all components before any start() is executed.
    */
   async init(): Promise<void> { }
@@ -137,10 +139,7 @@ export class Component {
   async start(): Promise<void> { }
 
   destroy(): void {
-    for (const cleanup of this.#cleanups) {
-      cleanup()
-    }
-    this.#cleanups = []
+    this.#events.destroy()
     delete (this.element as ComponentRootElement<this>).__instance
   }
 }
